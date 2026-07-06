@@ -136,7 +136,7 @@ Key | Description
 `limits` | Limits of the uploaded data
 `preservePath` | Keep the full client-supplied path in `file.originalname` instead of just the base name
 `streamHandler` | Function that feeds the request body to busboy; defaults to `req.pipe(busboy)`
-
+`parseJsonFields` | Parse fields that have the content-type `application/json`
 
 In an average web app, only `dest` might be required, and configured as shown in
 the following example.
@@ -361,6 +361,13 @@ const upload = multer({
 
 The function receives the request and the busboy instance and must write the
 whole multipart body to busboy and end it.
+
+### `parseJsonFields`
+
+Fields may also have a `Content-Type` header. If you set `parseJsonFields` to
+`true` these fields will be parsed using `JSON.parse()` instead of handled as
+plain text strings. This way you don't need to unroll complex JSON structures
+that are transmitted alongside uploaded files as url-encoded fields.
 
 ## Security
 

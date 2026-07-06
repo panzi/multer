@@ -68,6 +68,7 @@ var validateLimits = require('./lib/validate-limits')
  * @property {number} [highWaterMark] `highWaterMark` of the multipart parser stream; busboy's default
  * @property {number} [fileHwm] `highWaterMark` of each file stream (`file.stream`); busboy's default
  * @property {function(Object, Object): void} [streamHandler] Feeds the request body to busboy; defaults to `req.pipe(busboy)`
+ * @property {boolean} [parseJsonFields=false] Parse fields that have the content-type `application/json`
  */
 
 function allowAll (req, file, cb) {
@@ -103,6 +104,7 @@ function Multer (options) {
   }
 
   this.streamHandler = options.streamHandler
+  this.parseJsonFields = !!options.parseJsonFields
 }
 
 Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
@@ -151,7 +153,8 @@ Multer.prototype._makeMiddleware = function (fields, fileStrategy) {
       streamHandler: this.streamHandler,
       storage: this.storage,
       fileFilter: wrappedFileFilter,
-      fileStrategy: fileStrategy
+      fileStrategy: fileStrategy,
+      parseJsonFields: this.parseJsonFields
     }
   }
 
@@ -218,7 +221,8 @@ Multer.prototype.any = function () {
       streamHandler: this.streamHandler,
       storage: this.storage,
       fileFilter: this.fileFilter,
-      fileStrategy: 'ARRAY'
+      fileStrategy: 'ARRAY',
+      parseJsonFields: this.parseJsonFields
     }
   }
 
